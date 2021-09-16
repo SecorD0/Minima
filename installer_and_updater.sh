@@ -18,7 +18,7 @@ After=network-online.target
 
 [Service]
 User=$USER
-ExecStart=`which java` -Xmx1G -jar $HOME/minima/minima.jar
+ExecStart=`which java` -Xmx1G -jar $HOME/minima/minima.jar -daemon
 Restart=always
 RestartSec=3
 LimitNOFILE=65535
