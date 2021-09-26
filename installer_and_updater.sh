@@ -35,7 +35,7 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable minima
 sudo systemctl restart minima
-. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/insert_variable.sh) "minima_log" "sudo journalctl -f -n 100 -u minima" true
+. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/insert_variable.sh) -n "minima_log" -v "sudo journalctl -f -n 100 -u minima" -a
 echo -e '\e[40m\e[92mDone!\e[0m'
 . <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/logo.sh)
 echo -e '\nThe node was \e[40m\e[92mstarted\e[0m!\n'
