@@ -1,4 +1,7 @@
 #!/bin/bash
+# Default variables
+ram="1G"
+port="9001"
 # Options
 . <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/colors.sh) --
 option_value(){ echo "$1" | sed -e 's%^--[^=]*=%%g; s%^-[^=]*=%%g'; }
@@ -12,13 +15,25 @@ while test $# -gt 0; do
 		echo -e "${C_LGn}Usage${RES}: script ${C_LGn}[OPTIONS]${RES}"
 		echo
 		echo -e "${C_LGn}Options${RES}:"
-		echo -e "  -h, --help  show the help page"
+		echo -e "  -h, --help         show the help page"
+		echo -e "  -r, --ram NUMBER   limitation of memory usage. E.g. '${C_LGn}512m${RES}', '${C_LGn}1G${RES}' (default)"
+		echo -e "  -p, --port NUMBER  port used by the node (default is '${C_LGn}${port}${RES}')"
 		echo
 		echo -e "${C_LGn}Useful URLs${RES}:"
 		echo -e "https://github.com/SecorD0/Minima/blob/main/multi_tool.sh - script URL"
 		echo -e "https://t.me/letskynode — node Community"
 		echo
-		return 0
+		return 0 2>/dev/null; exit 0
+		;;
+	-r*|--ram*)
+		if ! grep -q "=" <<< "$1"; then shift; fi
+		ram=`option_value "$1"`
+		shift
+		;;
+	-p*|--port*)
+		if ! grep -q "=" <<< "$1"; then shift; fi
+		port=`option_value "$1"`
+		shift
 		;;
 	*|--)
 		break
@@ -28,7 +43,7 @@ done
 # Functions
 printf_n(){ printf "$1\n" "${@:2}"; }
 # Actions
-sudo apt install wget -y
+sudo apt install wget -y &>/dev/null
 . <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/logo.sh)
 sudo apt update
 sudo apt upgrade -y
@@ -41,8 +56,18 @@ if [ -f "/etc/systemd/system/minimad.service" ]; then
 	mv "/etc/systemd/system/minimad.service" "/etc/systemd/system/minima.service"
 	sudo systemctl daemon-reload
 fi
-sudo systemctl stop minima
-sudo systemctl disable minima
+if [ -f "/etc/systemd/system/minima.service" ]; then
+	p=`cat /etc/systemd/system/minima.service | grep -oP "(?<=-port )([^%]+)(?= )"`
+	if [ ! -n "$p" ]; then
+		p="9001"
+	fi
+	wget -qO- "localhost:${p}/quit"
+	printf_n "${C_LGn}Updating a node...
+Waiting 30 seconds to stop the node...${RES}"
+	sleep 30
+	sudo systemctl stop minima
+	sudo systemctl disable minima
+fi
 wget -qO $HOME/minima/minima.jar.new https://github.com/minima-global/Minima/raw/master/jar/minima.jar
 mv $HOME/minima/minima.jar $HOME/minima/minima.jar.bk
 mv $HOME/minima/minima.jar.new $HOME/minima/minima.jar
@@ -53,8 +78,8 @@ After=network-online.target
 
 [Service]
 User=$USER
-ExecStart=`which java` -Xmx1G -jar $HOME/minima/minima.jar -daemon
-Restart=always
+ExecStart=`which java` -Xmx${ram} -jar $HOME/minima/minima.jar -port ${port} -daemon
+Restart=on-failure
 RestartSec=3
 LimitNOFILE=65535
 
