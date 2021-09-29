@@ -10,7 +10,7 @@ while test $# -gt 0; do
 	-h|--help)
 		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/logo.sh)
 		echo
-		echo -e "${C_LGn}Functionality${RES}: the script installs and updates Minima node"
+		echo -e "${C_LGn}Functionality${RES}: the script installs and updates a Minima node"
 		echo
 		echo -e "${C_LGn}Usage${RES}: script ${C_LGn}[OPTIONS]${RES}"
 		echo
