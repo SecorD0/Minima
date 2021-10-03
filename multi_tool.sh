@@ -89,7 +89,7 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable minima
 sudo systemctl restart minima
-. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/insert_variable.sh) -n "minima_log" -v "sudo journalctl -f -n 100 -u minima" -a
+. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "minima_log" -v "sudo journalctl -f -n 100 -u minima" -a
 printf_n "${C_LGn}Done!${RES}\n"
 . <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/logo.sh)
 printf_n "
