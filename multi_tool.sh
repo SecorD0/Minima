@@ -16,7 +16,7 @@ while test $# -gt 0; do
 		echo
 		echo -e "${C_LGn}Options${RES}:"
 		echo -e "  -h, --help         show the help page"
-		echo -e "  -r, --ram NUMBER   limitation of memory usage. E.g. '${C_LGn}512m${RES}', '${C_LGn}1G${RES}' (default)"
+		echo -e "  -r, --ram VALUE    limitation of memory usage. E.g. '${C_LGn}512m${RES}', '${C_LGn}1G${RES}' (default)"
 		echo -e "  -p, --port NUMBER  port used by the node (default is '${C_LGn}${port}${RES}')"
 		echo
 		echo -e "${C_LGn}Useful URLs${RES}:"
