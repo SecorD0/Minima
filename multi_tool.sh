@@ -58,8 +58,9 @@ if [ -f "/etc/systemd/system/minimad.service" ]; then
 fi
 if [ -f "/etc/systemd/system/minima.service" ]; then
 	p=`cat /etc/systemd/system/minima.service | grep -oP "(?<=-port )([^%]+)(?= )"`
+	p=$(($p+1))
 	if [ ! -n "$p" ]; then
-		p="9001"
+		p="9002"
 	fi
 	wget -qO- "localhost:${p}/quit"
 	printf_n "${C_LGn}Updating a node...
