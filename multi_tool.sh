@@ -100,4 +100,6 @@ The node was ${C_LGn}started${RES}.
 To view the node status: ${C_LGn}systemctl status minima${RES}
 To view the node log: ${C_LGn}minima_log${RES}
 To restart the node: ${C_LGn}systemctl restart minima${RES}
+
+Web interface URL:${C_LGn}http://`wget -qO- eth0.me`:9004/${RES}"
 "
