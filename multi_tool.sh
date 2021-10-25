@@ -64,8 +64,8 @@ if [ -f "/etc/systemd/system/minima.service" ]; then
 	fi
 	wget -qO- "localhost:${p}/quit"
 	printf_n "
-${C_LGn}Updating a node...
-Waiting 30 seconds to stop the node...${RES}"
+${C_LGn}Updating a node...${RES}"
+	sleep 3
 	sudo systemctl stop minima
 	sudo systemctl disable minima
 fi
