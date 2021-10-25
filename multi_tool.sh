@@ -79,7 +79,7 @@ After=network-online.target
 [Service]
 User=$USER
 ExecStart=`which java` -Xmx${ram} -jar $HOME/minima/minima.jar -port ${port} -daemon
-Restart=on-failure
+Restart=always
 RestartSec=3
 LimitNOFILE=65535
 
