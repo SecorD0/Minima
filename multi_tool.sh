@@ -63,9 +63,9 @@ if [ -f "/etc/systemd/system/minima.service" ]; then
 		p="9002"
 	fi
 	wget -qO- "localhost:${p}/quit"
-	printf_n "${C_LGn}Updating a node...
+	printf_n "
+${C_LGn}Updating a node...
 Waiting 30 seconds to stop the node...${RES}"
-	sleep 30
 	sudo systemctl stop minima
 	sudo systemctl disable minima
 fi
@@ -102,5 +102,5 @@ To view the node status: ${C_LGn}systemctl status minima${RES}
 To view the node log: ${C_LGn}minima_log${RES}
 To restart the node: ${C_LGn}systemctl restart minima${RES}
 
-Web interface URL:${C_LGn}http://`wget -qO- eth0.me`:9004/${RES}"
+Web interface URL: ${C_LGn}http://`wget -qO- eth0.me`:9004/${RES}
 "
