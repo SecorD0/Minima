@@ -72,6 +72,7 @@ fi
 wget -qO $HOME/minima/minima.jar.new https://github.com/minima-global/Minima/raw/master/jar/minima.jar
 mv $HOME/minima/minima.jar $HOME/minima/minima.jar.bk
 mv $HOME/minima/minima.jar.new $HOME/minima/minima.jar
+. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/ports_opening.sh) 9001 9002 9003 9004
 sudo tee <<EOF >/dev/null /etc/systemd/system/minima.service
 [Unit]
 Description=Minima Node
