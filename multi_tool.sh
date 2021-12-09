@@ -184,7 +184,7 @@ register() {
 		fi
 		wget -qO- "localhost:${rpc_port}/incentivecash%20uid:${id}"
 	fi
-	printf_n
+	printf_n "\n${C_LGn}Done!${RES}"
 }
 
 # Actions
