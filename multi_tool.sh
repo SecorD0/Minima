@@ -63,6 +63,11 @@ done
 # Functions
 printf_n(){ printf "$1\n" "${@:2}"; }
 install() {
+	if [ "$port" = "9001" ]; then
+		local node_name="minima"
+	else
+		local node_name="minima_${port}"
+	fi
 	local is_docker=`docker ps -a 2>/dev/null | grep minima_node`
 	if [ -n "$is_docker" ]; then
 		printf_n "${C_R}You installed node into Docker!${RES}"
@@ -71,43 +76,44 @@ install() {
 	else
 		sudo apt update
 		sudo apt upgrade -y
-		if [ -f /etc/systemd/system/minima.service ]; then
+		if [ -f "/etc/systemd/system/${node_name}.service" ]; then
 			printf_n "\n${C_LGn}Updating a node...${RES}"
-			rpc_port=`cat /etc/systemd/system/minima.service | grep -oP "(?<=-rpc )([^%]+)(?= )"`
+			local rpc_port=`cat "/etc/systemd/system/${node_name}.service" | grep -oP "(?<=-rpc )([^%]+)(?= )"`
 			if [ ! -n "$rpc_port" ]; then
-				rpc_port="9002"
+				local rpc_port="9002"
 			fi
 			wget -qO- "localhost:${rpc_port}/quit"
+			printf_n
 			sleep 10
-			sudo systemctl stop minima
-			sudo systemctl disable minima
+			sudo systemctl stop "$node_name"
+			sudo systemctl disable "$node_name"
 		else
 			sudo apt install openjdk-11-jre-headless -y
 			printf_n "${C_LGn}Node installation...${RES}"
 		fi
 	fi
-	mkdir -p $HOME/.minima
+	mkdir -p $HOME/.minima "$HOME/.${node_name}"
 	wget -qO $HOME/.minima/minima.jar.new https://github.com/minima-global/Minima/raw/master/jar/minima.jar
 	mv $HOME/.minima/minima.jar $HOME/.minima/minima.jar.bk
 	mv $HOME/.minima/minima.jar.new $HOME/.minima/minima.jar
-	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/ports_opening.sh) 9001 9002 9003 9004
+	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/ports_opening.sh) "$port" $((port+1))
 	printf "[Unit]
 Description=Minima Node
 After=network-online.target
 
 [Service]
 User=$USER
-ExecStart=`which java` -Xmx${ram} -jar $HOME/.minima/minima.jar -data $HOME/.minima -port ${port} -rpcenable -rpc $((port+1)) -daemon
+ExecStart=`which java` -Xmx${ram} -jar $HOME/.minima/minima.jar -data $HOME/.${node_name} -port ${port} -rpcenable -rpc $((port+1)) -daemon
 Restart=on-failure
 RestartSec=3
 LimitNOFILE=65535
 
 [Install]
-WantedBy=multi-user.target" > /etc/systemd/system/minima.service
+WantedBy=multi-user.target" > "/etc/systemd/system/${node_name}.service"
 	sudo systemctl daemon-reload
-	sudo systemctl enable minima
-	sudo systemctl restart minima
-	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "minima_log" -v "sudo journalctl -fn 100 -u minima" -a
+	sudo systemctl enable "$node_name"
+	sudo systemctl restart "$node_name"
+	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "${node_name}_log" -v "sudo journalctl -fn 100 -u ${node_name}" -a
 	printf_n "${C_LGn}Done!${RES}\n"
 	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/logo.sh)
 	printf_n "
@@ -115,21 +121,26 @@ The node was ${C_LGn}started${RES}.
 
 \tv ${C_LGn}Useful commands${RES} v
 
-To view the node status: ${C_LGn}systemctl status minima${RES}
-To view the node log: ${C_LGn}minima_log${RES}
-To restart the node: ${C_LGn}systemctl restart minima${RES}
+To view the node status: ${C_LGn}systemctl status ${node_name}${RES}
+To view the node log: ${C_LGn}${node_name}_log${RES}
+To restart the node: ${C_LGn}systemctl restart ${node_name}${RES}
 "
 }
 docker_install() {
-	local is_docker=`docker ps -a 2>/dev/null | grep minima_node`
+	if [ "$port" = "9001" ]; then
+		local node_name="minima"
+	else
+		local node_name="minima_${port}"
+	fi
+	local is_docker=`docker ps -a 2>/dev/null | grep "${node_name}_node"`
 	if [ -n "$is_docker" ]; then
 		printf_n "\n${C_LGn}Updating a node...${RES}"
 		sudo apt update
 		sudo apt upgrade -y
-		docker exec -t minima_node sh -c 'wget -qO- "localhost:9002/quit"'
+		wget -qO- "localhost:$((port+1))/quit"
 		printf_n
 		sleep 10
-		docker rm minima_node -f
+		docker rm "${node_name}_node" -f
 	elif [ -f /etc/systemd/system/minima.service ]; then
 		printf_n "${C_R}You installed node via a service file!${RES}"
 		install
@@ -137,13 +148,13 @@ docker_install() {
 	else
 		printf_n "${C_LGn}Node installation...${RES}"
 		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/installers/docker.sh)
-		mkdir -p $HOME/.minima
 	fi
+	mkdir -p $HOME/.minima "$HOME/.${node_name}"
 	wget -qO $HOME/.minima/minima.jar.new https://github.com/minima-global/Minima/raw/master/jar/minima.jar
 	mv $HOME/.minima/minima.jar $HOME/.minima/minima.jar.bk
 	mv $HOME/.minima/minima.jar.new $HOME/.minima/minima.jar
-	docker run -dit --restart on-failure --name minima_node -v $HOME/.minima:/root/.minima --network host secord/minima
-	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "minima_log" -v "docker logs minima_node -fn 100" -a
+	docker run -dit --restart on-failure --name "${node_name}_node" -v "$HOME/.${node_name}":/root/.minima -v "$HOME/.minima/minima.jar":/root/.minima/minima.jar -p $port:9001 -p $((port+1)):9002 secord/minima
+	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "${node_name}_log" -v "docker logs ${node_name}_node -fn 100" -a
 	printf_n "${C_LGn}Done!${RES}\n"
 	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/logo.sh)
 	printf_n "
@@ -151,23 +162,27 @@ The node was ${C_LGn}started${RES}.
 
 \tv ${C_LGn}Useful commands${RES} v
 
-To view the node log: ${C_LGn}minima_log${RES}
-To restart the node: ${C_LGn}docker restart minima${RES}
+To view the node log: ${C_LGn}${node_name}_log${RES}
+To restart the node: ${C_LGn}docker restart ${node_name}_node${RES}
 "
 }
 uninstall() {
 	printf_n "${C_LGn}Node uninstalling...${RES}"
 	local is_docker=`docker ps -a 2>/dev/null | grep minima_node`
 	if [ -n "$is_docker" ]; then
-		docker rm minima_node -f
+		docker rm `docker ps -a | grep minima | awk '{print $1}'` -f
 		docker rmi secord/minima
 	else
-		service_files=`echo /etc/systemd/system/minima* | sed 's%/etc/systemd/system/%%g'`
-		sudo systemctl stop "$service_files"
+		local service_files=`echo /etc/systemd/system/minima* | sed 's%/etc/systemd/system/%%g'`
+		for service_file in $service_files; do
+			sudo systemctl stop "$service_file"
+		done
 		rm /etc/systemd/system/minima*
 		sudo systemctl daemon-reload
 	fi
-	rm -rf $HOME/minima $HOME/.minima $HOME/minima.jar* $HOME/minima_update.sh* $HOME/minima_service.sh*
+	rm -rf $HOME/minima* $HOME/.minima* $HOME/minima.jar* $HOME/minima_update.sh* $HOME/minima_service.sh*
+	sed -i "/minima/d" $HOME/.bash_profile
+	. $HOME/.bash_profile
 	printf_n "${C_LGn}Done!${RES}"
 }
 register() {
