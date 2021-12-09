@@ -189,16 +189,7 @@ register() {
 	printf "${C_LGn}Input your Node ID: ${RES}"
 	local id
 	read -r id
-	local is_docker=`docker ps -a 2>/dev/null | grep minima_node`
-	if [ -n "$is_docker" ]; then
-		docker exec -t minima_node sh -c 'wget -qO- "localhost:'$rpc_port'/incentivecash%20uid:'$id'"'
-	else
-		rpc_port=`cat /etc/systemd/system/minima.service | grep -oP "(?<=-rpc )([^%]+)(?= )"`
-		if [ ! -n "$rpc_port" ]; then
-			rpc_port="9002"
-		fi
-		wget -qO- "localhost:${rpc_port}/incentivecash%20uid:${id}"
-	fi
+	wget -qO- "localhost:$((port+1))/incentivecash%20uid:${id}"
 	printf_n "\n${C_LGn}Done!${RES}"
 }
 
