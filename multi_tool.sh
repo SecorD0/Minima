@@ -174,7 +174,7 @@ uninstall() {
 		rm /etc/systemd/system/minima*
 		sudo systemctl daemon-reload
 	fi
-	rm -rf $HOME/minima* $HOME/.minima* $HOME/minima.jar* $HOME/minima_update.sh* $HOME/minima_service.sh*
+	rm -rf $HOME/minima* $HOME/.minima* $HOME/minima.jar* $HOME/minima_update.sh* $HOME/minima_service.sh* /etc/cron.weekly/minima*
 	sed -i "/minima/d" $HOME/.bash_profile
 	. $HOME/.bash_profile
 	printf_n "${C_LGn}Done!${RES}"
