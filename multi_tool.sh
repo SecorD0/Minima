@@ -135,12 +135,10 @@ docker_install() {
 	local is_docker=`docker ps -a 2>/dev/null | grep "${node_name}_node"`
 	if [ -n "$is_docker" ]; then
 		printf_n "\n${C_LGn}Updating a node...${RES}"
-		sudo apt update
-		sudo apt upgrade -y
 		wget -qO- "localhost:$((port+1))/quit"
 		printf_n
 		sleep 10
-		docker rm "${node_name}_node" -f
+		docker restart "${node_name}_node"
 	elif [ -f /etc/systemd/system/minima.service ]; then
 		printf_n "${C_R}You installed node via a service file!${RES}"
 		install
@@ -148,12 +146,8 @@ docker_install() {
 	else
 		printf_n "${C_LGn}Node installation...${RES}"
 		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/installers/docker.sh)
+		docker run -dit --restart on-failure --name "${node_name}_node" -p $port:9001 -p $((port+1)):9002 secord/minima
 	fi
-	mkdir -p $HOME/.minima "$HOME/.${node_name}"
-	wget -qO $HOME/.minima/minima.jar.new https://github.com/minima-global/Minima/raw/master/jar/minima.jar
-	mv $HOME/.minima/minima.jar $HOME/.minima/minima.jar.bk
-	mv $HOME/.minima/minima.jar.new $HOME/.minima/minima.jar
-	docker run -dit --restart on-failure --name "${node_name}_node" -v "$HOME/.${node_name}":/root/.minima -v "$HOME/.minima/minima.jar":/root/.minima/minima.jar -p $port:9001 -p $((port+1)):9002 secord/minima
 	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "${node_name}_log" -v "docker logs ${node_name}_node -fn 100" -a
 	printf_n "${C_LGn}Done!${RES}\n"
 	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/logo.sh)
