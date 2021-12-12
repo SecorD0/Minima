@@ -188,7 +188,10 @@ register() {
 }
 
 # Actions
-if [ `whoami` != "root" ]; then sudo su -; fi
+if [ `whoami` != "root" ]; then
+	printf_n "${C_LGn}Authorizing as root user...${RES}"
+	sudo su -
+fi
 sudo apt install wget -y &>/dev/null
 . <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/logo.sh)
 $function
