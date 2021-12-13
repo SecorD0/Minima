@@ -57,6 +57,14 @@ printf_n(){ printf "$1\n" "${@:2}"; }
 main() {
 	# Texts
 	if [ "$language" = "RU" ]; then
+		local t_re="\n${C_R}Вы не зарегистрировали ноду!${RES}
+
+${C_LGn}Для регистрации необходимо${RES}:
+1) Перейти на сайт: https://incentivecash.minima.global/
+2) Авторизоваться
+3) Скопировать ID ноды
+4) Выполнить команду ниже и вставить ID ноды
+. <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/multi_tool.sh) -rg\n"
 		local t_ni="\nID ноды:              ${C_LGn}%s${RES}"
 		local t_raf="Награды после форка:  ${C_LGn}%d${RES}"
 		local t_rbf="Награды до форка:     ${C_LGn}%d${RES}"
@@ -67,6 +75,14 @@ main() {
 	# Send Pull request with new texts to add a language - https://github.com/SecorD0/Minima/blob/main/node_info.sh
 	#elif [ "$language" = ".." ]; then
 	else
+		local t_re="\n${C_R}You haven't registered the node!${RES}
+
+${C_LGn}To register you need to${RES}:
+1) Go to the site: https://incentivecash.minima.global/
+2) Log in
+3) Copy the node ID
+4) Execute the command below and enter the node ID
+. <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/multi_tool.sh) -rg\n"
 		local t_ni="\nNode ID:              ${C_LGn}%s${RES}"
 		local t_raf="Rewards after fork:   ${C_LGn}%d${RES}"
 		local t_rbf="Rewards before fork:  ${C_LGn}%d${RES}"
@@ -82,6 +98,10 @@ main() {
 	local incentivecash=`wget -qO- "${local_rpc}incentivecash"`
 	
 	local node_id=`jq -r ".response.uid" <<< "$incentivecash"`
+	if [ ! -n "$node_id" ]; then
+		printf_n "$t_re"
+		return 1 2>/dev/null; exit 1
+	fi
 	local node_id_hidden=`printf "$node_id" | sed 's%.*-.*-.*- *%...-%'`
 	local raf=`jq -r ".response.details.rewards.dailyRewards" <<< "$incentivecash"`
 	local rbf=`jq -r ".response.details.rewards.previousRewards" <<< "$incentivecash"`
