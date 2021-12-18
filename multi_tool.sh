@@ -65,8 +65,10 @@ printf_n(){ printf "$1\n" "${@:2}"; }
 install() {
 	if [ "$port" = "9001" ]; then
 		local node_name="minima"
+		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "minima_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU 2> /dev/null" -a
 	else
 		local node_name="minima_${port}"
+		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "${node_name}_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU -p $((port+1)) 2> /dev/null" -a
 	fi
 	local is_docker=`docker ps -a 2>/dev/null | grep minima_node`
 	if [ -n "$is_docker" ]; then
@@ -129,8 +131,10 @@ To restart the node: ${C_LGn}systemctl restart ${node_name}${RES}
 docker_install() {
 	if [ "$port" = "9001" ]; then
 		local node_name="minima"
+		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "minima_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU 2> /dev/null" -a
 	else
 		local node_name="minima_${port}"
+		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "${node_name}_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU -p $((port+1)) 2> /dev/null" -a
 	fi
 	local is_docker=`docker ps -a 2>/dev/null | grep "${node_name}_node"`
 	if [ -n "$is_docker" ]; then
