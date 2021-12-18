@@ -57,14 +57,15 @@ printf_n(){ printf "$1\n" "${@:2}"; }
 main() {
 	# Texts
 	if [ "$language" = "RU" ]; then
-		local t_re="\n${C_R}Вы не зарегистрировали ноду!${RES}
+		#local t_re="\n${C_R}Вы не зарегистрировали ноду!${RES}
 
-${C_LGn}Для регистрации необходимо${RES}:
-1) Перейти на сайт: https://incentivecash.minima.global/
-2) Авторизоваться
-3) Скопировать ID ноды
-4) Выполнить команду ниже и вставить ID ноды
-. <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/multi_tool.sh) -rg\n"
+#${C_LGn}Для регистрации необходимо${RES}:
+#1) Перейти на сайт: https://incentivecash.minima.global/
+#2) Авторизоваться
+#3) Скопировать ID ноды
+#4) Выполнить команду ниже и вставить ID ноды
+#. <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/multi_tool.sh) -rg\n"
+		local t_re="\n${C_R}Либо не зарегистрирована нода, либо некорректно работает RPC, который не починить!${RES}"
 		local t_ni="\nID ноды:              ${C_LGn}%s${RES}"
 		local t_raf="Награды после форка:  ${C_LGn}%d${RES}"
 		local t_rbf="Награды до форка:     ${C_LGn}%d${RES}"
@@ -75,14 +76,15 @@ ${C_LGn}Для регистрации необходимо${RES}:
 	# Send Pull request with new texts to add a language - https://github.com/SecorD0/Minima/blob/main/node_info.sh
 	#elif [ "$language" = ".." ]; then
 	else
-		local t_re="\n${C_R}You haven't registered the node!${RES}
+		#local t_re="\n${C_R}You haven't registered the node!${RES}
 
-${C_LGn}To register you need to${RES}:
-1) Go to the site: https://incentivecash.minima.global/
-2) Log in
-3) Copy the node ID
-4) Execute the command below and enter the node ID
-. <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/multi_tool.sh) -rg\n"
+#${C_LGn}To register you need to${RES}:
+#1) Go to the site: https://incentivecash.minima.global/
+#2) Log in
+#3) Copy the node ID
+#4) Execute the command below and enter the node ID
+#. <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/multi_tool.sh) -rg\n"
+		local t_re="\n${C_R}Either the node is not registered, or the RPC does not work correctly, which cannot be fixed!${RES}"
 		local t_ni="\nNode ID:              ${C_LGn}%s${RES}"
 		local t_raf="Rewards after fork:   ${C_LGn}%d${RES}"
 		local t_rbf="Rewards before fork:  ${C_LGn}%d${RES}"
