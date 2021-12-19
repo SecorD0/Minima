@@ -55,6 +55,7 @@ done
 # Functions
 printf_n(){ printf "$1\n" "${@:2}"; }
 main() {
+	sudo apt install jq -y &>/dev/null
 	# Texts
 	if [ "$language" = "RU" ]; then
 		#local t_re="\n${C_R}Вы не зарегистрировали ноду!${RES}
