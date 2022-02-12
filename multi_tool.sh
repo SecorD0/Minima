@@ -63,6 +63,9 @@ done
 # Functions
 printf_n(){ printf "$1\n" "${@:2}"; }
 install() {
+	printf_n "${C_R}Not supported anymore${RES}"
+	return 0 2>/dev/null; exit 0
+	
 	if [ "$port" = "9001" ]; then
 		local node_name="minima"
 		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "minima_node_info" -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) -l RU 2> /dev/null" -a
