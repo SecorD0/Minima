@@ -3,15 +3,14 @@ FROM alpine
 LABEL creator="SecorD | Let's Node"
 LABEL url="https://t.me/letskynode — node Community"
 
-WORKDIR minima
+WORKDIR root
 
-COPY minima_node.sh .
+COPY entrypoint.sh .
 
-RUN apk add -U --no-cache wget bash openjdk11; \
-	chmod +x minima_node.sh
+RUN apk add -U --no-cache wget bash openjdk11
 
 EXPOSE 9001 9002
 
-ENTRYPOINT ["./minima_node.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
 
-CMD ["-Xmx1G", "-jar", "/minima/minima.jar", "-data", "/minima/.minima", "-port", "9001", "-rpcenable", "-rpc", "9002", "-daemon"]
+CMD ["-Xmx1G", "-jar", "/root/minima.jar", "-data", "/root/.minima", "-port", "9001", "-rpcenable", "-rpc", "9002", "-daemon"]
