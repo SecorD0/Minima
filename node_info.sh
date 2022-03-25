@@ -126,7 +126,6 @@ main() {
 	local latest_block_height=`jq -r ".response.chain.block" <<< "$status"`
 	
 	local after_fork=`jq -r ".response.details.rewards.dailyRewards" <<< "$incentivecash"`
-	
 	local before_fork=`jq -r ".response.details.rewards.previousRewards" <<< "$incentivecash"`
 	local community_contribution=`jq -r ".response.details.rewards.communityRewards" <<< "$incentivecash"`
 	local inviting_referrals=`jq -r ".response.details.rewards.inviterRewards" <<< "$incentivecash"`
