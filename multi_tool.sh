@@ -28,7 +28,8 @@ while test $# -gt 0; do
 		echo -e "https://github.com/SecorD0/Minima/blob/main/multi_tool.sh - script URL"
 		echo -e "https://teletype.in/@letskynode/Minima_EN — English-language a node installation guide"
 		echo -e "https://teletype.in/@letskynode/Minima_RU — Russian-language a node installation guide"
-		echo -e "https://t.me/letskynode — node Community"
+		echo -e "https://t.me/OnePackage — noderun and tech community"
+		echo -e "https://learning.1package.io — guides and articles"
 		echo -e "https://teletype.in/@letskynode — guides and articles"
 		echo
 		return 0 2>/dev/null; exit 0
