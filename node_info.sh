@@ -1,6 +1,6 @@
 #!/bin/bash
 # Default variables
-port="9002"
+port="9005"
 language="EN"
 raw_output="false"
 
