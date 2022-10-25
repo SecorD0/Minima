@@ -86,7 +86,7 @@ install() {
 			printf_n "\n${C_LGn}Updating a node...${RES}"
 			local rpc_port=`cat "/etc/systemd/system/${node_name}.service" | grep -oP "(?<=-rpc )([^%]+)(?= )"`
 			if [ ! -n "$rpc_port" ]; then
-				local rpc_port="9002"
+				local rpc_port="9005"
 			fi
 			wget -qO- "localhost:${rpc_port}/quit"
 			printf_n
@@ -154,7 +154,7 @@ docker_install() {
 	else
 		printf_n "${C_LGn}Node installation...${RES}"
 		. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/installers/docker.sh)
-		docker run -dit --restart on-failure --name "${node_name}_node" -v $HOME/.minima/:/minima/.minima -p $port:9001 -p $((port+1)):9002 secord/minima
+		docker run -dit --restart on-failure --name "${node_name}_node" -v $HOME/.minima/:/minima/.minima -p $port:9001 -p $((port+1)):9005 secord/minima
 	fi
 	. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n "${node_name}_log" -v "docker logs ${node_name}_node -fn 100" -a
 	printf_n "${C_LGn}Done!${RES}\n"
