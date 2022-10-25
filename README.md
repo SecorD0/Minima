@@ -45,7 +45,7 @@
 
 ⠀Create a container with a node
 ```sh
-docker run -dit --restart on-failure --name minima_node -p 9001:9001 -p 9002:9002 secord/minima
+docker run -dit --restart on-failure --name minima_node -p 9001:9001 -p 9005:9005 secord/minima
 ```
 
 ⠀Add commands to the system as aliases:
