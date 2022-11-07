@@ -52,7 +52,7 @@ docker run -dit --restart on-failure --name minima_node -p 9001:9001 -p 9005:900
 - To view the log of the node;
 - To view the information about the node.
 ```sh
-. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n minima_log -v "sudo journalctl -fn 100 -u minima" -a
+. <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n minima_log -v "docker logs minima_node -fn 100" -a
 . <(wget -qO- https://raw.githubusercontent.com/SecorD0/utils/main/miscellaneous/insert_variable.sh) -n minima_node_info -v ". <(wget -qO- https://raw.githubusercontent.com/SecorD0/Minima/main/node_info.sh) 2> /dev/null" -a
 ```
 
